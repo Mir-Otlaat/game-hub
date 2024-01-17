@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { Grid, GridItem, Show } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
-import GameGrid from "./GameGrid";
+import GameGrid from "./components/GameGrid";
+import GenreList from "./components/GenreList";
+import { Genre } from "./hooks/useGenres";
+import GameHeading from "./components/GameHeading";
 
 function App() {
+  const [selectedGenre, setSelectedGenre] = useState<Genre | null>(null);
+  const [selectedSearchText, setSelectedSearchText] = useState<string>("");
+
   return (
     <Grid
       templateAreas={{
@@ -12,13 +18,21 @@ function App() {
       }}
     >
       <GridItem>
-        <NavBar></NavBar>
+        <NavBar
+          onSearchNav={(searchText) => setSelectedSearchText(searchText)}
+        ></NavBar>
       </GridItem>
       <Show above="lg">
-        <GridItem>Aside</GridItem>
+        <GridItem>
+          <GenreList
+            onSelectedGenres={(genre) => setSelectedGenre(genre)}
+            selectedGenre={selectedGenre}
+          />
+        </GridItem>
       </Show>
       <GridItem>
-        <GameGrid></GameGrid>
+        <GameHeading genreHeading={selectedGenre} />
+        <GameGrid sGenre={selectedGenre} sSearchText={selectedSearchText} />
       </GridItem>
     </Grid>
   );
